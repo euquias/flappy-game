@@ -15,9 +15,9 @@ function Barreira(revesa = false) {
 }
 /* const b = new Barreira(false)
 b.setAltura(300)
-document.querySelector('[wm-flappy]').appendChild(b.elemento)  */ 
+document.querySelector('[wm-flappy]').appendChild(b.elemento)  */
 
-  function pardebarreira(altura, abertura, x) {
+function pardebarreira(altura, abertura, x) {
     this.elemento = novoElemento('div', 'par-de-barreiras')
 
     this.superior = new Barreira(true)
@@ -42,18 +42,18 @@ document.querySelector('[wm-flappy]').appendChild(b.elemento)  */
 
 /*  const b = new pardebarreira(700, 300, 800)
 document.querySelector('[wm-flappy]').appendChild(b.elemento)    */
- 
- function Barreiras(altura, largura, abertura, espaco, notificaponto) {
+
+function Barreiras(altura, largura, abertura, espaco, notificaponto) {
     this.pares = [
         new pardebarreira(altura, abertura, largura),
         new pardebarreira(altura, largura, largura + espaco),
         new pardebarreira(altura, largura, largura + espaco * 2),
         new pardebarreira(altura, largura, largura + espaco * 3)
     ]
-    const delocamento = 3
+    const deslocamento = 3
     this.animar = () => {
         this.pares.forEach(par => {
-            par.setx(par.getx() - delocamento)
+            par.setx(par.getx() - deslocamento)
 
             if (par.getx() < - par.getLargura()) {
                 par.setx(par.getx() + espaco * this.pares.length)
@@ -66,9 +66,41 @@ document.querySelector('[wm-flappy]').appendChild(b.elemento)    */
         })
     }
 }
+function Passaro(alturajogo) {
+
+    let voando = false
+
+    this.elemento = novoElemento('img', 'passaro')
+    this.elemento.src = 'img/passaro1.png'
+
+    this.gety = () => parseInt(this.elemento.style.bottom.split('px')[0])
+    this.sety = y => this.elemento.style.bottom = `${y}px`
+
+    window.onkeydown = e => voando = true
+    window.onkeyup = e => voando = false
+
+    this.animar = () => {
+        const novoy = this.gety() + (voando ? 8 : -5)
+        const alturamMaxima = alturajogo - this.elemento.clientHeight
+
+        if (novoy <= 0) {
+            this.sety(0)
+        } else if (novoy >= alturamMaxima) {
+            this.sety(alturamMaxima)
+        } else {
+            this.sety(novoy)
+        }
+    }
+    this.sety(alturajogo / 5)
+}
+
+
 const barreiras = new Barreiras(700, 1200, 350, 400)
+const passaro = new Passaro(700)
 const ariadojogo = document.querySelector('[wm-flappy]')
+ariadojogo.appendChild(passaro.elemento)
 barreiras.pares.forEach(par => ariadojogo.appendChild(par.elemento))
 setInterval(() => {
     barreiras.animar()
-}, 30)  
+    passaro.animar()
+}, 20)  
