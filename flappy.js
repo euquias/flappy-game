@@ -55,10 +55,11 @@ function Barreiras(altura, largura, abertura, espaco, notificaponto) {
         this.pares.forEach(par => {
             par.setx(par.getx() - deslocamento)
 
-            if (par.getx() < - par.getLargura()) {
+            if (par.getx() < -par.getLargura()) {
                 par.setx(par.getx() + espaco * this.pares.length)
                 par.sortearAbertura()
             }
+
             const meio = largura / 2
             const crusarmeio = par.getx() + deslocamento >= meio
                 && par.getx() < meio
@@ -94,13 +95,50 @@ function Passaro(alturajogo) {
     this.sety(alturajogo / 5)
 }
 
+function Progresso() {
+    this.elemento = novoElemento('span', 'progresso')
+    this.atualizarPontos = pontos => {
+        this.elemento.innerHTML = pontos
+    }
+    this.atualizarPontos(0)
+}
 
-const barreiras = new Barreiras(700, 1200, 350, 400)
+
+
+const barreiras = new Barreiras(700, 1200, 350, 400 )
 const passaro = new Passaro(700)
 const ariadojogo = document.querySelector('[wm-flappy]')
 ariadojogo.appendChild(passaro.elemento)
+ariadojogo.appendChild(new Progresso().elemento)
 barreiras.pares.forEach(par => ariadojogo.appendChild(par.elemento))
 setInterval(() => {
     barreiras.animar()
     passaro.animar()
-}, 20)  
+}, 20)   
+  
+
+/*  function FlappyBird() {
+    let pontos = 0
+
+    const ariadojogo = document.querySelector('[wm-flappy]')
+    const altura = ariadojogo.clientHeight
+    const largura = ariadojogo.clientWidth
+
+    const progresso = new Passaro()
+    const barreira = new Barreira(altura, largura, 200, 400,
+        () => progresso.atualizarPontos(++pontos))
+    const passaro = new Passaro(altura)
+
+    ariadojogo.appendChild(progresso.elemento)
+    ariadojogo.appendChild(passaro.elemento)
+    ariadojogo.pares.forEach(par => ariadojogo.appendChild(par.elemento))
+
+    this.start =() =>{
+        const temporizador = setInterval(() => {
+            barreiras.animar()
+            passaro.animar()
+        }, 20);
+    }
+}
+
+new FlappyBird().start()  */
